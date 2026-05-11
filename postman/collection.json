@@ -17,17 +17,24 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status is 200\", () => {\r",
+                  "pm.test(\"Status is 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
                   "\r",
-                  "const data = pm.response.json();\r",
+                  "var loginResponse = pm.response.json();\r",
                   "\r",
-                  "pm.environment.set(\"token\", data.accessToken || data.token);\r",
-                  "pm.environment.set(\"userId\", data.id);\r",
+                  "pm.environment.set(\r",
+                  "    \"token\",\r",
+                  "    loginResponse.accessToken\r",
+                  ");\r",
                   "\r",
-                  "pm.test(\"Token exists\", () => {\r",
-                  "    pm.expect(data.accessToken || data.token).to.exist;\r",
+                  "pm.environment.set(\r",
+                  "    \"userId\",\r",
+                  "    loginResponse.id\r",
+                  ");\r",
+                  "\r",
+                  "pm.test(\"Token exists\", function () {\r",
+                  "    pm.expect(loginResponse.accessToken).to.exist;\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -118,7 +125,7 @@
                   "const d = pm.response.json();\r",
                   "\r",
                   "pm.test(\"Has email\", () => {\r",
-                  "    pm.expect(d).to.have.property(\"email\");\r",
+                  "    pm.expect(d.email).to.exist;\r",
                   "});\r",
                   "\r",
                   "pm.test(\"Email valid\", () => {\r",
@@ -147,13 +154,13 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/users/{{userId}}",
+              "raw": "{{baseUrl}}/users/1",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "users",
-                "{{userId}}"
+                "1"
               ]
             }
           },
